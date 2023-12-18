@@ -1,0 +1,225 @@
+{
+    "given_name": "Hrishikesh",
+    "sur_name": "Tavar",
+    "father_name": "A",
+    "address": "Pune",
+    "contact_number": "9898989898",
+    "email": "asas@gmail.com",
+    "birth_date": "19-12-2023",
+    "place_of_birth": "asasd",
+    "marital_status": "Single ",
+    "gender": "Male",
+
+    "computer_skills": [
+      "asdasd",
+      "dsfdfgd",
+      "dfgdfg"
+    ],
+
+    "hobbies": [
+      "asdasd",
+      "asdasd",
+      "asdasd"
+    ],
+
+    "candidate": "<file-here>",
+    "passport_number": "56567889895656434343",
+    "passport": "<file-here>",
+
+
+    "german": [
+        {
+            "level": "B1",
+            "from": "20-12-2023",
+            "to": "20-12-2023",
+            "certification_date": "21-12-2023",
+            "listening_module":"<file-here>",
+            "speaking_module":"<file-here>",
+            "reading_module":"<file-here>",
+            "writing_module":"<file-here>"
+        },
+        {
+            "level": "B2",
+            "from": "20-12-2023",
+            "to": "20-12-2023",
+            "certification_date": "21-12-2023",
+            "listening_module":"<file-here>",
+            "speaking_module":"<file-here>",
+            "reading_module":"<file-here>",
+            "writing_module":"<file-here>"
+        }
+        ,
+        {
+            "level": "A1",
+            "from": "20-12-2023",
+            "to": "20-12-2023",
+            "certification_date": "21-12-2023"
+        }
+    ],
+
+
+    "post_graduate": [
+      {
+        "course":"Post B.Sc.",
+        "year_no": "3",
+        "from_date": "18-12-2023",
+        "to_date": "14-12-2023",
+        "marksheet": "<file-here>",
+        "school":"School_1"
+      },
+      {
+        "course":"Post B.Sc.",
+        "year_no": "2",
+        "from_date": "21-12-2023",
+        "to_date": "21-12-2023",
+        "marksheet": "<file-here>",
+        "school":"School_1"
+      }
+    ],
+
+
+    "under_graduate": [
+      {
+        "course":"Diploma",
+        "year_no": "3",
+        "from_date": "13-12-2023",
+        "to_date": "22-12-2023",
+        "marksheet": "<file-here>",
+        "school":"School_1"
+      },
+      {
+        "course":"Diploma",
+        "year_no": "2",
+        "from_date": "13-12-2023",
+        "to_date": "22-12-2023",
+        "marksheet": "<file-here>",
+        "school":"School_1"
+      }
+    ],
+
+
+    "twelweth": {
+      "institute": "dsdfsdfsd",
+      "from_date": "20-12-2023",
+      "to_date": "22-12-2023",
+      "marksheet": "<file-here>"
+    },
+
+
+    "eleventh": {
+      "institute": "ssdfsdf",
+      "from_date": "20-12-2023",
+      "to_date": "20-12-2023",
+      "marksheet": "<file-here>"
+    },
+
+
+    "tenth": {
+      "institute": "sdfsdfsd",
+      "from_date": "20-12-2023",
+      "to_date": "20-12-2023",
+      "marksheet": "<file-here>"
+    },
+
+
+    "first_to_ninth": {
+      "institute": "sdfsdfsdf",
+      "from_date": "20-12-2023",
+      "to_date": "21-12-2023"
+    },
+
+
+    "blank_year": [
+      {
+        "reason": "sdfsdfsdfsdf",
+        "from_date": "21-12-2023",
+        "to_date": "28-12-2023"
+      },
+      {
+        "reason": "sdfsdf",
+        "from_date": "21-12-2023",
+        "to_date": "22-12-2023"
+      }
+    ],
+
+
+    "language": {
+        "mother_tounge":"Marathi",
+        "english": "good"
+    },
+
+
+    "internship": [
+        {
+            "from_date":"12/01/23",
+            "to_date":"23/02/23",
+            "hospital_name":"asdasd",
+            "dept":"as",
+            "internship_certificate":"<file-here>",
+            "duties":[
+                {
+                    "info":"duty1",
+                    "dur":"12"
+                },
+                {
+                    "info":"duty2",
+                    "dur":"12"
+                }
+            ]
+        },
+        {
+            "from_date":"12/01/23",
+            "to_date":"23/02/23",
+            "hospital_name":"asdasd3434",
+            "dept":"as3434",
+            "internship_certificate":"<file-here>",
+            "duties":[
+                {
+                    "info":"duty1",
+                    "dur":"6"
+                },
+                {
+                    "info":"duty2",
+                    "dur":"6"
+                }
+            ]
+        }
+    ],
+
+
+    "work_experience": [
+      {
+        "department": "dfdfgdfgdf",
+        "from_date": "19-12-2023",
+        "to_date": "19-12-2023",
+        "employer_name":"asdasd",
+        "work_experience_certificate": "<file-here>"
+      },
+      {
+        "department": "fgdfg",
+        "from_date": "20-12-2023",
+        "to_date": "21-12-2023",
+        "employer_name":"asdasd",
+        "work_experience_certificate": "<file-here>"
+      }
+    ],
+
+
+    "declaration":{
+        "signature_img":"<file-here>",
+        "place":"asdas",
+        "country":"sdasdas",
+        "date":"12/12/23"
+    },
+
+    "motivation_letter":{
+        "name":"sdasd",
+        "address":"address",
+        "phn":"898987876",
+        "email":"sasd@gmail.com",
+        "letter":"sdasdasdasdas",
+        "best_regards":"asdasdasdsasd",
+        "signature_img":"<file-here>"
+    }
+
+  }
