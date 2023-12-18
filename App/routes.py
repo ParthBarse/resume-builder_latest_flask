@@ -12,6 +12,8 @@ from flask import Flask, request, jsonify, send_file
 
 # ================================================= Auth ================================================
 
+host = "20.197.17.85"
+
 UPLOAD_FOLDER = '/var/www/html/Resume_Builder'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -74,9 +76,9 @@ def sendDisapprove():
         return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
     
 # MongoDB connection setup
-client = MongoClient('mongodb://localhost:27017/')
-db = client['your_database_name']
-collection = db['your_collection_name']
+client = MongoClient('mongodb+srv://resume:resume123@cluster0.fjnp4qu.mongodb.net/')
+db = client['resume_project']
+collection = db['resumes']
 
 # Directory to store files
 file_directory = '/var/www/html/Resume_Files/'
@@ -86,7 +88,7 @@ def save_file(file, uid):
     file_path = os.path.join(file_directory, uid, filename)
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     file.save(file_path)
-    return f'http://127.0.0.1/Resume_Files/{uid}/{filename}'
+    return f'http://{host}/Resume_Files/{uid}/{filename}'
 
 @app.route('/submitResume', methods=['POST'])
 def submit_resume():
