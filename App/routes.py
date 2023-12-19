@@ -20,6 +20,7 @@ UPLOAD_FOLDER = '/var/www/html/Resume_Builder'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SECRET_KEY'] = "secretKey"
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -71,7 +72,7 @@ def create_jwt_token(sid):
     
     
 @app.route('/loginStudent', methods=['POST'])
-def login_admin():
+def login_student():
     try:
         data = request.get_json()
 
