@@ -163,12 +163,12 @@ collection = db['resumes']
 # Directory to store files
 file_directory = '/var/www/html/Resume_Files/'
 
-def save_file(file, uid):
+def save_file(file, sid):
     filename = str(uuid.uuid4())  # Generate a unique filename using UUID
-    file_path = os.path.join(file_directory, uid, filename)
+    file_path = os.path.join(file_directory, sid, filename)
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     file.save(file_path)
-    return f'http://{host}/Resume_Files/{uid}/{filename}'
+    return f'http://{host}/Resume_Files/{sid}/{filename}'
 
 @app.route('/submitResume', methods=['POST'])
 def submit_resume():
@@ -176,70 +176,87 @@ def submit_resume():
         data = request.json  # Parse JSON data
 
         # Extracting common information
-        uid = data.get('uid')
+        sid = data.get('sid')
         file_urls = {}
 
         # Handle candidate file
         candidate_file = request.files.get('candidate')
         if candidate_file:
-            file_urls['candidate'] = save_file(candidate_file, uid)
+            file_urls['candidate'] = save_file(candidate_file, sid)
 
         # Handle passport file
         passport_file = request.files.get('passport')
         if passport_file:
-            file_urls['passport'] = save_file(passport_file, uid)
+            file_urls['passport'] = save_file(passport_file, sid)
 
         # Handle German language files
         for entry in data.get('german', []):
             for module in ['listening_module', 'speaking_module', 'reading_module', 'writing_module']:
                 file = entry.get(module)
                 if file:
-                    entry[module] = save_file(file, uid)
+                    entry[module] = save_file(file, sid)
 
         # Handle Post Graduate, Under Graduate, Twelfth, Eleventh, Tenth, and First to Ninth files
         for category in ['post_graduate', 'under_graduate', 'twelweth', 'eleventh', 'tenth', 'first_to_ninth']:
             for entry in data.get(category, []):
                 marksheet_file = entry.get('marksheet')
                 if marksheet_file:
-                    entry['marksheet'] = save_file(marksheet_file, uid)
+                    entry['marksheet'] = save_file(marksheet_file, sid)
 
         # Handle Blank Year files
         for entry in data.get('blank_year', []):
             reason_file = entry.get('reason_file')
             if reason_file:
-                entry['reason_file'] = save_file(reason_file, uid)
+                entry['reason_file'] = save_file(reason_file, sid)
 
         # Handle Language files
         signature_file = data['declaration']['signature_img']
         if signature_file:
-            data['declaration']['signature_img'] = save_file(signature_file, uid)
+            data['declaration']['signature_img'] = save_file(signature_file, sid)
 
         # Handle Internship files
         for entry in data.get('internship', []):
             internship_certificate_file = entry.get('internship_certificate')
             if internship_certificate_file:
-                entry['internship_certificate'] = save_file(internship_certificate_file, uid)
+                entry['internship_certificate'] = save_file(internship_certificate_file, sid)
 
         # Handle Work Experience files
         for entry in data.get('work_experience', []):
             work_experience_certificate_file = entry.get('work_experience_certificate')
             if work_experience_certificate_file:
-                entry['work_experience_certificate'] = save_file(work_experience_certificate_file, uid)
+                entry['work_experience_certificate'] = save_file(work_experience_certificate_file, sid)
 
         # Handle Declaration signature file
         declaration_signature_file = data['declaration']['signature_img']
         if declaration_signature_file:
-            data['declaration']['signature_img'] = save_file(declaration_signature_file, uid)
+            data['declaration']['signature_img'] = save_file(declaration_signature_file, sid)
 
         # Handle Motivation Letter signature file
         motivation_letter_signature_file = data['motivation_letter']['signature_img']
         if motivation_letter_signature_file:
-            data['motivation_letter']['signature_img'] = save_file(motivation_letter_signature_file, uid)
+            data['motivation_letter']['signature_img'] = save_file(motivation_letter_signature_file, sid)
 
         # Save the modified data to MongoDB
         collection.insert_one(data)
 
         return jsonify({'message': 'Data stored successfully.'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/getStudentLoginInfo', methods=['GET'])
+def getStudentLoginInfo():
+    try:
+        students_db = db["students_db"]
+        # Extracting common information
+        sid = request.args.get('sid')
+
+        data = students_db.find_one({"sid": sid}, {"_id": 0})
+        if data:
+            return jsonify({'message': 'Success',"data":data}), 200
+        else:
+            return jsonify({"message":"No Student fount with this sid"})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
