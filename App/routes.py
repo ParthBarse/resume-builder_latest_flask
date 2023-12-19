@@ -25,7 +25,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/registerStudemt', methods=['POST'])
+@app.route('/registerStudent', methods=['POST'])
 def register_student():
     try:
         data = request.get_json()
