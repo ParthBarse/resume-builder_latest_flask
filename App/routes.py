@@ -173,10 +173,17 @@ def save_file(file, sid):
 @app.route('/submitResume', methods=['POST'])
 def submit_resume():
     try:
-        data = request.json  # Parse JSON data
+        data = request.get_json()  # Use get_json() instead of request.json
+
+        # Check if data is a valid dictionary
+        if not isinstance(data, dict):
+            return jsonify({'error': 'Invalid JSON format. Expected a dictionary.'}), 400
 
         # Extracting common information
         sid = data.get('sid')
+        if sid is None:
+            return jsonify({'error': 'Missing "sid" parameter in the request data.'}), 400
+
         file_urls = {}
 
         # Handle candidate file
@@ -240,6 +247,16 @@ def submit_resume():
         collection.insert_one(data)
 
         return jsonify({'message': 'Data stored successfully.'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/getAllStudentsResume', methods=['GET'])
+def get_all_students_resume():
+    try:
+        # Retrieve all students' resumes from MongoDB
+        all_resumes = list(collection.find({}, {'_id': 0}))
+        return jsonify({'resumes': all_resumes}), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
