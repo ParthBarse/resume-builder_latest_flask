@@ -292,3 +292,28 @@ def getStudentLoginInfo():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+file_directory = '/var/www/html/Resume_Files/'
+    
+@app.route('/uploadImage', methods=['POST'])
+def upload_image():
+    try:
+        # Check if 'image' and 'sid' parameters are present in the form data
+        if 'image' not in request.files or 'sid' not in request.form:
+            return jsonify({'error': 'Missing parameters: image or sid.'}), 400
+
+        image_file = request.files['image']
+        sid = request.form['sid']
+
+        # Check if the file is an allowed type (e.g., image)
+        allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+        if '.' in image_file.filename and image_file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
+            return jsonify({'error': 'Invalid file type. Only allowed: png, jpg, jpeg, gif.'}), 400
+
+        # Save the image and get the URL
+        file_url = save_file(image_file, sid)
+
+        return jsonify({'message': 'Image stored successfully.', 'file_url': file_url}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
