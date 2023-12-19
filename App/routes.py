@@ -62,6 +62,9 @@ def register_student():
         return jsonify({"error": str(e)}), 500  # Internal Server Error
     
 import jwt
+import datetime
+from flask import jsonify
+
 def create_jwt_token(sid):
     payload = {
         'sid': sid,
@@ -69,8 +72,7 @@ def create_jwt_token(sid):
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
-    
-    
+
 @app.route('/loginStudent', methods=['POST'])
 def login_student():
     try:
@@ -92,12 +94,13 @@ def login_student():
             return jsonify({"error": "Invalid email or password.", "success": False}), 401  # Unauthorized
 
         # Generate JWT token
-        token = create_jwt_token(student['sid'])
+        token = create_jwt_token(student['sid']).decode('utf-8')  # Decode bytes to string
 
         return jsonify({"message": "Login successful.", "success": True, "sid": student['sid'], "token": token})
 
     except Exception as e:
         return jsonify({"error": str(e), "success": False}), 500  # Internal Server Error
+
 
 
 # Endpoint for requesting password reset (for admin)
