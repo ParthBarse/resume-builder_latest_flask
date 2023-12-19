@@ -196,67 +196,67 @@ def submit_resume():
 
         file_urls = {}
 
-        # Handle candidate file
-        candidate_file = request.files.get('candidate')
-        if candidate_file:
-            file_urls['candidate'] = save_file(candidate_file, sid)
+        # # Handle candidate file
+        # candidate_file = request.files.get('candidate')
+        # if candidate_file:
+        #     file_urls['candidate'] = save_file(candidate_file, sid)
 
-        # Handle passport file
-        passport_file = request.files.get('passport')
-        if passport_file:
-            file_urls['passport'] = save_file(passport_file, sid)
+        # # Handle passport file
+        # passport_file = request.files.get('passport')
+        # if passport_file:
+        #     file_urls['passport'] = save_file(passport_file, sid)
 
-        # Handle German language files
-        if data.get('german'):
-            for entry in data.get('german', []):
-                for module in ['listening_module', 'speaking_module', 'reading_module', 'writing_module']:
-                    file = entry.get(module)
-                    if file:
-                        entry[module] = save_file(file, sid)
+        # # Handle German language files
+        # if data.get('german'):
+        #     for entry in data.get('german', []):
+        #         for module in ['listening_module', 'speaking_module', 'reading_module', 'writing_module']:
+        #             file = entry.get(module)
+        #             if file:
+        #                 entry[module] = save_file(file, sid)
 
-        # Handle Post Graduate, Under Graduate, Twelfth, Eleventh, Tenth, and First to Ninth files
-        for category in ['post_graduate', 'under_graduate', 'twelweth', 'eleventh', 'tenth', 'first_to_ninth']:
-            for entry in data.get(category, []):
-                if entry :
-                    marksheet_file = entry.get('marksheet')
-                    if marksheet_file:
-                        entry['marksheet'] = save_file(marksheet_file, sid)
+        # # Handle Post Graduate, Under Graduate, Twelfth, Eleventh, Tenth, and First to Ninth files
+        # for category in ['post_graduate', 'under_graduate', 'twelweth', 'eleventh', 'tenth', 'first_to_ninth']:
+        #     for entry in data.get(category, []):
+        #         if entry :
+        #             marksheet_file = entry.get('marksheet')
+        #             if marksheet_file:
+        #                 entry['marksheet'] = save_file(marksheet_file, sid)
 
-        # Handle Blank Year files
-        for entry in data.get('blank_year', []):
-            if entry:
-                reason_file = entry.get('reason_file')
-                if reason_file:
-                    entry['reason_file'] = save_file(reason_file, sid)
+        # # Handle Blank Year files
+        # for entry in data.get('blank_year', []):
+        #     if entry:
+        #         reason_file = entry.get('reason_file')
+        #         if reason_file:
+        #             entry['reason_file'] = save_file(reason_file, sid)
 
-        # Handle Language files
-        signature_file = data['declaration']['signature_img']
-        if signature_file:
-            data['declaration']['signature_img'] = save_file(signature_file, sid)
+        # # Handle Language files
+        # signature_file = data['declaration']['signature_img']
+        # if signature_file:
+        #     data['declaration']['signature_img'] = save_file(signature_file, sid)
 
-        # Handle Internship files
-        for entry in data.get('internship', []):
-            if entry:
-                internship_certificate_file = entry.get('internship_certificate')
-                if internship_certificate_file:
-                    entry['internship_certificate'] = save_file(internship_certificate_file, sid)
+        # # Handle Internship files
+        # for entry in data.get('internship', []):
+        #     if entry:
+        #         internship_certificate_file = entry.get('internship_certificate')
+        #         if internship_certificate_file:
+        #             entry['internship_certificate'] = save_file(internship_certificate_file, sid)
 
-        # Handle Work Experience files
-        if data.get('work_experience'):
-            for entry in data.get('work_experience', []):
-                work_experience_certificate_file = entry.get('work_experience_certificate')
-                if work_experience_certificate_file:
-                    entry['work_experience_certificate'] = save_file(work_experience_certificate_file, sid)
+        # # Handle Work Experience files
+        # if data.get('work_experience'):
+        #     for entry in data.get('work_experience', []):
+        #         work_experience_certificate_file = entry.get('work_experience_certificate')
+        #         if work_experience_certificate_file:
+        #             entry['work_experience_certificate'] = save_file(work_experience_certificate_file, sid)
 
-        # Handle Declaration signature file
-        declaration_signature_file = data['declaration']['signature_img']
-        if declaration_signature_file:
-            data['declaration']['signature_img'] = save_file(declaration_signature_file, sid)
+        # # Handle Declaration signature file
+        # declaration_signature_file = data['declaration']['signature_img']
+        # if declaration_signature_file:
+        #     data['declaration']['signature_img'] = save_file(declaration_signature_file, sid)
 
-        # Handle Motivation Letter signature file
-        motivation_letter_signature_file = data['motivation_letter']['signature_img']
-        if motivation_letter_signature_file:
-            data['motivation_letter']['signature_img'] = save_file(motivation_letter_signature_file, sid)
+        # # Handle Motivation Letter signature file
+        # motivation_letter_signature_file = data['motivation_letter']['signature_img']
+        # if motivation_letter_signature_file:
+        #     data['motivation_letter']['signature_img'] = save_file(motivation_letter_signature_file, sid)
 
         # Save the modified data to MongoDB
         collection.insert_one(data)
