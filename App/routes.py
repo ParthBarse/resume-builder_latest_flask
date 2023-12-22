@@ -16,6 +16,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 host = "20.197.17.85"
 
+# MongoDB connection setup
+client = MongoClient('mongodb+srv://resume:resume123@cluster0.fjnp4qu.mongodb.net/')
+db = client['resume_project']
+collection = db['resumes']
+
 UPLOAD_FOLDER = '/var/www/html/Resume_Builder'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -128,6 +133,49 @@ def sendApprove():
 
     except Exception as e:
         return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
+    
+
+
+
+# Endpoint for requesting password reset (for admin)
+@app.route("/sendApproveNew", methods=["GET"])
+def sendApprove_New():
+    try:
+        sid = request.args.get('sid')
+        students_db = db["students_db"]
+        student_data = students_db.find_one({"sid":sid}, {"_id":0})
+        mailToSend = student_data['personal']['email']
+        # Send the password reset link via email
+        sender_email = "partbarse92@gmail.com"
+        smtp_server = smtplib.SMTP("smtp.gmail.com", 587)
+        smtp_server.ehlo()
+        smtp_server.starttls()
+        smtp_server.login("partbarse92@gmail.com", "xdfrjwaxctwqpzyg")
+
+        message_text = f"Hello, Your Resume is now Approved by Admin"
+        message = MIMEText(message_text)
+        message["Subject"] = "Request Approved Successfully"
+        message["From"] = sender_email
+        message["To"] = mailToSend
+
+        smtp_server.sendmail(sender_email, mailToSend, message.as_string())
+        smtp_server.quit()
+
+        data = {
+            "isApproved":"Approved"
+        }
+        new_values = {"$set": data}
+        student_data.update_one({"sid":sid}, new_values)
+
+        return jsonify({'success': True, 'msg': 'Mail Send'}), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
+    
+
+
+
+
 
 @app.route("/sendDisapprove", methods=["GET"])
 def sendDisapprove():
@@ -154,6 +202,48 @@ def sendDisapprove():
 
     except Exception as e:
         return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
+    
+
+
+
+    
+
+@app.route("/sendDisapproveNew", methods=["GET"])
+def sendDisapproveNew():
+    try:
+        sid = request.args.get('sid')
+        comment = request.args.get('comment')
+        students_db = db["students_db"]
+        student_data = students_db.find_one({"sid":sid}, {"_id":0})
+        mailToSend = student_data['personal']['email']
+        # Send the password reset link via email
+        sender_email = "partbarse92@gmail.com"
+        smtp_server = smtplib.SMTP("smtp.gmail.com", 587)
+        smtp_server.ehlo()
+        smtp_server.starttls()
+        smtp_server.login("partbarse92@gmail.com", "xdfrjwaxctwqpzyg")
+
+        message_text = f"Hello, Your Resume is Rejected by Admin \n\n Please Review below comments and resubmit the form - \n {comment}"
+        message = MIMEText(message_text)
+        message["Subject"] = "Request Approved Rejected"
+        message["From"] = sender_email
+        message["To"] = mailToSend
+
+        smtp_server.sendmail(sender_email, mailToSend, message.as_string())
+        smtp_server.quit()
+
+        data = {
+            "isApproved":"Disapproved"
+        }
+        new_values = {"$set": data}
+        student_data.update_one({"sid":sid}, new_values)
+
+        return jsonify({'success': True, 'msg': 'Mail Send'}), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
+
+
     
 # MongoDB connection setup
 client = MongoClient('mongodb+srv://resume:resume123@cluster0.fjnp4qu.mongodb.net/')
@@ -272,6 +362,28 @@ def get_all_students_resume():
         # Retrieve all students' resumes from MongoDB
         all_resumes = list(collection.find({}, {'_id': 0}))
         return jsonify({'resumes': all_resumes}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/getStudent', methods=['GET'])
+def get_student_resume():
+    try:
+        sid = request.args.get("sid")
+        # Retrieve all students' resumes from MongoDB
+        resume = collection.find_one({"sid":sid}, {'_id': 0})
+        return jsonify({'resume': resume}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+
+@app.route('/deleteResume', methods=['GET'])
+def delete_students_resume():
+    try:
+        sid = request.args.get("sid")
+        collection.delete_one({"sid":sid})
+        return jsonify({"msg":"Deleted Successfully"}), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
