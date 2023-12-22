@@ -165,7 +165,7 @@ def sendApprove_New():
             "isApproved":"Approved"
         }
         new_values = {"$set": data}
-        student_data.update_one({"sid":sid}, new_values)
+        collection.update_one({"sid":sid}, new_values)
 
         return jsonify({'success': True, 'msg': 'Mail Send'}), 200
 
@@ -236,7 +236,7 @@ def sendDisapproveNew():
             "isApproved":"Disapproved"
         }
         new_values = {"$set": data}
-        student_data.update_one({"sid":sid}, new_values)
+        collection.update_one({"sid":sid}, new_values)
 
         return jsonify({'success': True, 'msg': 'Mail Send'}), 200
 
