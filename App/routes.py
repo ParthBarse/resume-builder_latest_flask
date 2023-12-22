@@ -143,7 +143,7 @@ def sendApprove_New():
     try:
         sid = request.args.get('sid')
         students_db = db["students_db"]
-        student_data = students_db.find_one({"sid":sid}, {"_id":0})
+        student_data = collection.find_one({"sid":sid}, {"_id":0})
         mailToSend = student_data['personal']['email']
         # Send the password reset link via email
         sender_email = "partbarse92@gmail.com"
@@ -214,7 +214,7 @@ def sendDisapproveNew():
         sid = request.args.get('sid')
         comment = request.args.get('comment')
         students_db = db["students_db"]
-        student_data = students_db.find_one({"sid":sid}, {"_id":0})
+        student_data = collection.find_one({"sid":sid}, {"_id":0})
         mailToSend = student_data['personal']['email']
         # Send the password reset link via email
         sender_email = "partbarse92@gmail.com"
