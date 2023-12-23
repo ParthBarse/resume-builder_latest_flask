@@ -292,6 +292,32 @@ def submit_resume():
     except Exception as e:
         return jsonify({'error': str(e),"success":False}), 500
 
+@app.route('/editStudentResume', methods=['POST'])
+def edit_student_resume():
+    try:
+        data = request.get_json()
+
+        # # Check if data is a valid dictionary
+        # if not isinstance(data, dict):
+        #     return jsonify({'error': 'Invalid JSON format. Expected a dictionary.', "success": False}), 400
+
+        # Extracting common information
+        sid = data.get('sid')
+        if sid is None:
+            return jsonify({'error': 'Missing "sid" parameter in the request data.', "success": False}), 400
+
+        # Update the student's resume data in MongoDB
+        result = collection.update_one({'sid': sid}, {'$set': data})
+
+        # Check if the update was successful
+        if result.modified_count > 0:
+            return jsonify({'message': 'Data updated successfully.', "success": True}), 200
+        else:
+            return jsonify({'error': 'No document found for the provided sid.', "success": False}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e), "success": False}), 500
+
 @app.route('/getAllStudentsResume', methods=['GET'])
 def get_all_students_resume():
     try:
