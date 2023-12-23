@@ -292,7 +292,7 @@ def submit_resume():
     except Exception as e:
         return jsonify({'error': str(e),"success":False}), 500
 
-@app.route('/editStudentResume', methods=['POST'])
+@app.route('/editStudentResume', methods=['PUT'])
 def edit_student_resume():
     try:
         data = request.get_json()
