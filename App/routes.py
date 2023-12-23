@@ -414,7 +414,7 @@ def delete_file(sid, filename):
 @app.route('/deleteFile', methods=['POST'])
 def delete_file_api():
     try:
-        data = request.get_json()
+        data = request.json
         # Check if 'sid' and 'url' parameters are present in the form data
         if 'sid' not in data or 'url' not in data:
             return jsonify({'error': 'Missing parameters: sid or url.', "success": False}), 400
