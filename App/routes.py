@@ -394,3 +394,43 @@ def upload_file():
 
     except Exception as e:
         return jsonify({'error': str(e),"success":False}), 500
+    
+# Directory to store files
+file_directory = '/var/www/html/Resume_Files/'
+
+def delete_file(sid, filename):
+    try:
+        file_path = os.path.join(file_directory, sid, filename)
+
+        # Check if the file exists before attempting to delete
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            return True
+        else:
+            return False
+    except Exception as e:
+        raise e
+
+@app.route('/deleteFile', methods=['POST'])
+def delete_file_api():
+    try:
+        # Check if 'sid' and 'url' parameters are present in the form data
+        if 'sid' not in request.form or 'url' not in request.form:
+            return jsonify({'error': 'Missing parameters: sid or url.', "success": False}), 400
+
+        sid = request.form['sid']
+        url = request.form['url']
+
+        # Extract filename from the file URL
+        _, _, _, filename = url.split('/')
+
+        # Delete the file and check the result
+        success = delete_file(sid, filename)
+
+        if success:
+            return jsonify({'message': 'File deleted successfully.', "success": True}), 200
+        else:
+            return jsonify({'error': 'File not found or unable to delete.', "success": False}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e), "success": False}), 500
