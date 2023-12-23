@@ -423,7 +423,7 @@ def delete_file_api():
         url = data['url']
 
         # Extract filename from the file URL
-        _, _, _, filename = url.split('/')
+        filename = url.split('/')[-1]
 
         # Delete the file and check the result
         success = delete_file(sid, filename)
