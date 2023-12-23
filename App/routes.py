@@ -277,94 +277,30 @@ def submit_resume():
 
         # Check if data is a valid dictionary
         if not isinstance(data, dict):
-            return jsonify({'error': 'Invalid JSON format. Expected a dictionary.'}), 400
+            return jsonify({'error': 'Invalid JSON format. Expected a dictionary.',"success":False}), 400
 
         # Extracting common information
         sid = data.get('sid')
         if sid is None:
-            return jsonify({'error': 'Missing "sid" parameter in the request data.'}), 400
-
-        file_urls = {}
-
-        # # Handle candidate file
-        # candidate_file = request.files.get('candidate')
-        # if candidate_file:
-        #     file_urls['candidate'] = save_file(candidate_file, sid)
-
-        # # Handle passport file
-        # passport_file = request.files.get('passport')
-        # if passport_file:
-        #     file_urls['passport'] = save_file(passport_file, sid)
-
-        # # Handle German language files
-        # if data.get('german'):
-        #     for entry in data.get('german', []):
-        #         for module in ['listening_module', 'speaking_module', 'reading_module', 'writing_module']:
-        #             file = entry.get(module)
-        #             if file:
-        #                 entry[module] = save_file(file, sid)
-
-        # # Handle Post Graduate, Under Graduate, Twelfth, Eleventh, Tenth, and First to Ninth files
-        # for category in ['post_graduate', 'under_graduate', 'twelweth', 'eleventh', 'tenth', 'first_to_ninth']:
-        #     for entry in data.get(category, []):
-        #         if entry :
-        #             marksheet_file = entry.get('marksheet')
-        #             if marksheet_file:
-        #                 entry['marksheet'] = save_file(marksheet_file, sid)
-
-        # # Handle Blank Year files
-        # for entry in data.get('blank_year', []):
-        #     if entry:
-        #         reason_file = entry.get('reason_file')
-        #         if reason_file:
-        #             entry['reason_file'] = save_file(reason_file, sid)
-
-        # # Handle Language files
-        # signature_file = data['declaration']['signature_img']
-        # if signature_file:
-        #     data['declaration']['signature_img'] = save_file(signature_file, sid)
-
-        # # Handle Internship files
-        # for entry in data.get('internship', []):
-        #     if entry:
-        #         internship_certificate_file = entry.get('internship_certificate')
-        #         if internship_certificate_file:
-        #             entry['internship_certificate'] = save_file(internship_certificate_file, sid)
-
-        # # Handle Work Experience files
-        # if data.get('work_experience'):
-        #     for entry in data.get('work_experience', []):
-        #         work_experience_certificate_file = entry.get('work_experience_certificate')
-        #         if work_experience_certificate_file:
-        #             entry['work_experience_certificate'] = save_file(work_experience_certificate_file, sid)
-
-        # # Handle Declaration signature file
-        # declaration_signature_file = data['declaration']['signature_img']
-        # if declaration_signature_file:
-        #     data['declaration']['signature_img'] = save_file(declaration_signature_file, sid)
-
-        # # Handle Motivation Letter signature file
-        # motivation_letter_signature_file = data['motivation_letter']['signature_img']
-        # if motivation_letter_signature_file:
-        #     data['motivation_letter']['signature_img'] = save_file(motivation_letter_signature_file, sid)
+            return jsonify({'error': 'Missing "sid" parameter in the request data.',"success":False}), 400
 
         # Save the modified data to MongoDB
         collection.insert_one(data)
 
-        return jsonify({'message': 'Data stored successfully.'}), 200
+        return jsonify({'message': 'Data stored successfully.',"success":True}), 200
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e),"success":False}), 500
 
 @app.route('/getAllStudentsResume', methods=['GET'])
 def get_all_students_resume():
     try:
         # Retrieve all students' resumes from MongoDB
         all_resumes = list(collection.find({}, {'_id': 0}))
-        return jsonify({'resumes': all_resumes}), 200
+        return jsonify({'resumes': all_resumes, "success":True}), 200
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e),"success":False}), 500
     
 @app.route('/getStudent', methods=['GET'])
 def get_student_resume():
@@ -372,10 +308,10 @@ def get_student_resume():
         sid = request.args.get("sid")
         # Retrieve all students' resumes from MongoDB
         resume = collection.find_one({"sid":sid}, {'_id': 0})
-        return jsonify({'resume': resume}), 200
+        return jsonify({'resume': resume,"success":True}), 200
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e),"success":False}), 500
     
 
 @app.route('/deleteResume', methods=['GET'])
@@ -383,10 +319,10 @@ def delete_students_resume():
     try:
         sid = request.args.get("sid")
         collection.delete_one({"sid":sid})
-        return jsonify({"msg":"Deleted Successfully"}), 200
+        return jsonify({"msg":"Deleted Successfully","success":True}), 200
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e),"success":False}), 500
 
 
 @app.route('/getStudentLoginInfo', methods=['GET'])
@@ -398,12 +334,12 @@ def getStudentLoginInfo():
 
         data = students_db.find_one({"sid": sid}, {"_id": 0})
         if data:
-            return jsonify({'message': 'Success',"data":data}), 200
+            return jsonify({'message': 'Success',"data":data,"success":True}), 200
         else:
-            return jsonify({"message":"No Student fount with this sid"})
+            return jsonify({"message":"No Student fount with this sid","success":False})
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e),"success":False}), 500
 
 file_directory = '/var/www/html/Resume_Files/'
     
@@ -412,7 +348,7 @@ def upload_file():
     try:
         # Check if 'file' and 'sid' parameters are present in the form data
         if 'file' not in request.files or 'sid' not in request.form:
-            return jsonify({'error': 'Missing parameters: file or sid.'}), 400
+            return jsonify({'error': 'Missing parameters: file or sid.',"success":False}), 400
 
         uploaded_file = request.files['file']
         sid = request.form['sid']
@@ -423,12 +359,12 @@ def upload_file():
             '.' in uploaded_file.filename
             and uploaded_file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions
         ):
-            return jsonify({'error': 'Invalid file type. Only allowed: png, jpg, jpeg, gif, pdf.'}), 400
+            return jsonify({'error': 'Invalid file type. Only allowed: png, jpg, jpeg, gif, pdf.',"success":False}), 400
 
         # Save the file and get the URL
         file_url = save_file(uploaded_file, sid)
 
-        return jsonify({'message': 'File stored successfully.', 'file_url': file_url}), 200
+        return jsonify({'message': 'File stored successfully.', 'file_url': file_url,"success":True}), 200
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e),"success":False}), 500
