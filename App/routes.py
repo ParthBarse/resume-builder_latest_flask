@@ -91,7 +91,7 @@ def register_admin():
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
         # Store admin information in the MongoDB collection
-        students_db = db['students_db']
+        students_db = db['admin_db']
         students_db.insert_one({"fname":fname, "lname":lname, "email": email, "phn":phn, "password": hashed_password, "aid":aid})
 
         return jsonify({"message": "Admin added successfully.","success":True, "aid":aid})
