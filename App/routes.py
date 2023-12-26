@@ -496,3 +496,83 @@ def delete_file_api():
 
     except Exception as e:
         return jsonify({'error': str(e), "success": False}), 500
+    
+# Endpoint for requesting password reset (for admin)
+@app.route("/forgot_password", methods=["POST"])
+def forgot_password():
+    try:
+        from datetime import datetime, timedelta
+
+        user_db = db["students_db"]
+        # Get email from request
+        email = request.form.get('email')
+
+        # Check if the provided email exists in the database
+        user_data = user_db.find_one({"email": email})
+
+        if not user_data:
+            return jsonify({'success': False, 'msg': 'Email not found'}), 404
+
+        # Generate a random password reset token and update it in the user's document in the database
+        reset_token = jwt.encode({
+            'uid': user_data["uid"],
+            'exp': datetime.utcnow() + timedelta(hours=1)  # Token expiration time (1 hour)
+        }, app.config['SECRET_KEY'], algorithm='HS256')
+
+        user_db.update_one({"email": email}, {"$set": {"reset_token": reset_token}})
+
+        # Send the password reset link via email
+        sender_email = "partbarse92@gmail.com"
+        smtp_server = smtplib.SMTP("smtp.gmail.com", 587)
+        smtp_server.ehlo()
+        smtp_server.starttls()
+        smtp_server.login("partbarse92@gmail.com", "xdfrjwaxctwqpzyg")
+
+        reset_link = f"http://localhost:8090/forgotpassword?email={email}&reset_token={reset_token}"
+        message_text = f"Hi,\n\nYou have requested a password reset for your admin account.\n\nPlease click on the following link to reset your password:\n\n{reset_link}\n\nIf you didn't request this reset, please ignore this email.\n\nBest regards,\nThe Admin Team"
+        message = MIMEText(message_text)
+        message["Subject"] = "Password Reset Request"
+        message["From"] = sender_email
+        message["To"] = email
+
+        smtp_server.sendmail(sender_email, email, message.as_string())
+        smtp_server.quit()
+
+        return jsonify({'success': True, 'msg': 'Password reset link sent to your email'}), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
+
+
+# Endpoint for handling password reset (for admin)
+@app.route("/reset_password", methods=["POST"])
+def reset_password():
+    try:
+        user_db = db["students_db"]
+        # Get form data from request
+        email = request.form.get('email')
+        new_password = request.form.get('new_password')
+        reset_token = request.form.get('reset_token')
+
+        # Check if the provided email exists in the database
+        user_data = user_db.find_one({"email": email})
+
+        if not user_data:
+            return jsonify({'success': False, 'msg': 'Email not found'}), 404
+
+        # Verify the reset token
+        try:
+            jwt.decode(reset_token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return jsonify({'success': False, 'msg': 'Reset token has expired'}), 401
+        except jwt.InvalidTokenError as e:
+            return jsonify({'success': False, 'msg': 'Invalid reset token', "reason": str(e)}), 401
+
+        # If token is valid, update the user's password in the database
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        user_db.update_one({"email": email}, {"$set": {"pass": hashed_password, "reset_token": None}})
+
+        return jsonify({'success': True, 'msg': 'Password reset successful'}), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
