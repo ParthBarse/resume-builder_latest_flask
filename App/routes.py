@@ -61,7 +61,40 @@ def register_student():
         students_db = db['students_db']
         students_db.insert_one({"fname":fname, "lname":lname, "email": email, "phn":phn, "password": hashed_password, "que":que, "ans":ans, "sid":sid})
 
-        return jsonify({"message": "Admin added successfully.","success":True, "sid":sid})
+        return jsonify({"message": " Registration Successful.","success":True, "sid":sid})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  # Internal Server Error
+    
+@app.route('/registerAdmin', methods=['POST'])
+def register_admin():
+    try:
+        data = request.get_json()
+
+        # Get parameters from the JSON data
+        students_db = db['admin_db']
+        fname = data.get('fname')
+        lname = data.get('lname')
+        email = data.get('email')
+        password = data.get('password')
+        phn = data.get('phn')
+        aid = str(uuid.uuid4().hex)
+        admin = students_db.find_one({"email": email}, {"_id": 0})
+        if admin:
+            return jsonify({"success":False,"error":"email Already Exist"})
+
+        # Check if email and password are provided
+        if not email or not password:
+            return jsonify({"error": "email and password are required."}), 400  # Bad Request
+
+        # Hash the password before storing it
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+
+        # Store admin information in the MongoDB collection
+        students_db = db['students_db']
+        students_db.insert_one({"fname":fname, "lname":lname, "email": email, "phn":phn, "password": hashed_password, "aid":aid})
+
+        return jsonify({"message": "Admin added successfully.","success":True, "aid":aid})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500  # Internal Server Error
@@ -102,6 +135,34 @@ def login_student():
         token = create_jwt_token(student['sid']).decode('utf-8')  # Decode bytes to string
 
         return jsonify({"message": "Login successful.", "success": True, "sid": student['sid'], "token": token})
+
+    except Exception as e:
+        return jsonify({"error": str(e), "success": False}), 500  # Internal Server Error
+    
+@app.route('/loginAdmin', methods=['POST'])
+def login_admin():
+    try:
+        data = request.get_json()
+
+        # Get parameters from the JSON data
+        email = data.get('email')
+        password = data.get('password')
+
+        # Check if email and password are provided
+        if not email or not password:
+            return jsonify({"error": "email and password are required.", "success": False}), 400  # Bad Request
+
+        # Find the admin based on email
+        students_db = db["admin_db"]
+        student = students_db.find_one({"email": email}, {"_id": 0})
+
+        if not student or not check_password_hash(student.get("password", ""), password):
+            return jsonify({"error": "Invalid email or password.", "success": False}), 401  # Unauthorized
+
+        # Generate JWT token
+        token = create_jwt_token(student['sid']).decode('utf-8')  # Decode bytes to string
+
+        return jsonify({"message": "Login successful.", "success": True, "aid": student['aid'], "token": token})
 
     except Exception as e:
         return jsonify({"error": str(e), "success": False}), 500  # Internal Server Error
