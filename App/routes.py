@@ -515,7 +515,7 @@ def forgot_password():
 
         # Generate a random password reset token and update it in the user's document in the database
         reset_token = jwt.encode({
-            'uid': user_data["uid"],
+            'sid': user_data["sid"],
             'exp': datetime.utcnow() + timedelta(hours=1)  # Token expiration time (1 hour)
         }, app.config['SECRET_KEY'], algorithm='HS256')
 
