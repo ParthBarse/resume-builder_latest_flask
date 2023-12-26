@@ -561,7 +561,7 @@ def reset_password():
         if str(user_data["reset_token"]) == str(reset_token):
             # If token is valid, update the user's password in the database
             hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-            user_db.update_one({"email": email}, {"$set": {"pass": hashed_password, "reset_token": None}})
+            user_db.update_one({"email": email}, {"$set": {"password": hashed_password, "reset_token": None}})
         else:
             return jsonify({'success': False, 'msg': 'Reset token Invalid'}), 401
 
