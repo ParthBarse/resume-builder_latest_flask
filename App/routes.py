@@ -529,7 +529,7 @@ def forgot_password():
         smtp_server.login("partbarse92@gmail.com", "xdfrjwaxctwqpzyg")
 
         reset_link = f"http://localhost:8090/forgotpassword?email={email}&reset_token={reset_token}"
-        message_text = f"Hi,\n\nYou have requested a password reset for your admin account.\n\nPlease click on the following link to reset your password:\n\n{reset_link}\n\nIf you didn't request this reset, please ignore this email.\n\nBest regards,\nThe Admin Team"
+        message_text = f"Hi,\n\nYou have requested a password reset for your account.\n\nPlease click on the following link to reset your password:\n\n{reset_link}\n\nIf you didn't request this reset, please ignore this email.\n\nBest regards,\nThe Admin Team"
         message = MIMEText(message_text)
         message["Subject"] = "Password Reset Request"
         message["From"] = sender_email
