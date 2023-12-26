@@ -561,16 +561,12 @@ def reset_password():
             return jsonify({'success': False, 'msg': 'Email not found'}), 404
 
         # Verify the reset token
-        try:
-            jwt.decode(reset_token, app.config['SECRET_KEY'], algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            return jsonify({'success': False, 'msg': 'Reset token has expired'}), 401
-        except jwt.InvalidTokenError as e:
-            return jsonify({'success': False, 'msg': 'Invalid reset token', "reason": str(e)}), 401
-
-        # If token is valid, update the user's password in the database
-        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-        user_db.update_one({"email": email}, {"$set": {"pass": hashed_password, "reset_token": None}})
+        if str(user_data["reset_token"]) == str(reset_token):
+            # If token is valid, update the user's password in the database
+            hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+            user_db.update_one({"email": email}, {"$set": {"pass": hashed_password, "reset_token": None}})
+        else:
+            return jsonify({'success': False, 'msg': 'Reset token Invalid'}), 401
 
         return jsonify({'success': True, 'msg': 'Password reset successful'}), 200
 
