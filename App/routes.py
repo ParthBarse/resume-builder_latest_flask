@@ -134,7 +134,7 @@ def login_student():
         # Generate JWT token
         token = create_jwt_token(student['sid']).decode('utf-8')  # Decode bytes to string
 
-        return jsonify({"message": "Login successful.", "success": True, "sid": student['sid'], "token": token})
+        return jsonify({"message": "Login successful.", "success": True, "sid": student['sid'], "token": token, "display_name": str(student['fname']+" "+students_db['lname'])})
 
     except Exception as e:
         return jsonify({"error": str(e), "success": False}), 500  # Internal Server Error
