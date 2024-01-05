@@ -368,13 +368,22 @@ def edit_student_resume():
             return jsonify({'error': 'Missing "sid" parameter in the request data.', "success": False}), 400
 
         # Update the student's resume data in MongoDB
-        result = collection.update_one({'sid': sid}, {'$set': data})
 
-        # Check if the update was successful
-        if result.modified_count > 0:
+        data_resume = collection.find_one({"sid":sid})
+
+        if data_resume:
+            result = collection.update_one({'sid': sid}, {'$set': data})
             return jsonify({'message': 'Data updated successfully.', "success": True}), 200
         else:
             return jsonify({'error': 'No document found for the provided sid.', "success": False}), 404
+
+        # data_resume = collection.find_one({"sid":sid})
+
+        # Check if the update was successful
+        # if result.modified_count > 0:
+        #     return jsonify({'message': 'Data updated successfully.', "success": True}), 200
+        # else:
+        #     return jsonify({'error': 'No document found for the provided sid.', "success": False}), 404
 
     except Exception as e:
         return jsonify({'error': str(e), "success": False}), 500
