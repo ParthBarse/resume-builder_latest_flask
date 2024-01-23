@@ -132,7 +132,7 @@ def login_student():
             return jsonify({"error": "Invalid email or password.", "success": False}), 401  # Unauthorized
 
         # Generate JWT token
-        token = create_jwt_token(student['sid']).decode('utf-8')  # Decode bytes to string
+        token = create_jwt_token(student['sid'])  # Decode bytes to string
 
         return jsonify({"message": "Login successful.", "success": True, "sid": student['sid'], "token": token, "display_name": str(student['fname'])})
 
@@ -160,7 +160,7 @@ def login_admin():
             return jsonify({"error": "Invalid email or password.", "success": False}), 401  # Unauthorized
 
         # Generate JWT token
-        token = create_jwt_token(student['aid']).decode('utf-8')  # Decode bytes to string
+        token = create_jwt_token(student['aid'])  # Decode bytes to string
 
         return jsonify({"message": "Login successful.", "success": True, "aid": student['aid'], "token": token})
 
