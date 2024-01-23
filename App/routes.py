@@ -21,7 +21,7 @@ client = MongoClient('mongodb+srv://resume:resume123@cluster0.fjnp4qu.mongodb.ne
 db = client['resume_project']
 collection = db['resumes']
 
-UPLOAD_FOLDER = '/var/www/html/Resume_Builder'
+UPLOAD_FOLDER = '/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Builder'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -312,7 +312,7 @@ db = client['resume_project']
 collection = db['resumes']
 
 # Directory to store files
-file_directory = '/var/www/html/Resume_Files/'
+file_directory = '/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files/'
 
 def save_file(file, uid):
     try:
@@ -437,7 +437,7 @@ def getStudentLoginInfo():
     except Exception as e:
         return jsonify({'error': str(e),"success":False}), 500
 
-file_directory = '/var/www/html/Resume_Files/'
+file_directory = '/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files/'
     
 @app.route('/uploadFile', methods=['POST'])
 def upload_file():
@@ -466,7 +466,7 @@ def upload_file():
         return jsonify({'error': str(e),"success":False}), 500
     
 # Directory to store files
-file_directory = '/var/www/html/Resume_Files/'
+file_directory = '/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files/'
 
 def delete_file(sid, filename):
     try:
