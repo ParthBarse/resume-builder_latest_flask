@@ -14,7 +14,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # ================================================= Auth ================================================
 
-host = "20.197.17.85"
+host = "files1.nursingpioneer.com"
 
 # MongoDB connection setup
 client = MongoClient('mongodb+srv://resume:resume123@cluster0.fjnp4qu.mongodb.net/')
@@ -327,7 +327,7 @@ def save_file(file, uid):
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         file.save(file_path)
 
-        return f'http://{host}/Resume_Files/{uid}/{filename}'
+        return f'https://{host}/Resume_Files/{uid}/{filename}'
     except Exception as e:
         raise e
 
@@ -534,7 +534,7 @@ def forgot_password():
         smtp_server.starttls()
         smtp_server.login("partbarse92@gmail.com", "xdfrjwaxctwqpzyg")
 
-        reset_link = f"http://localhost:8090/forgotpassword?email={email}&reset_token={reset_token}"
+        reset_link = f"https://testapi1.nursingpioneer.com/forgotpassword?email={email}&reset_token={reset_token}"
         message_text = f"Hi,\n\nYou have requested a password reset for your account.\n\nPlease click on the following link to reset your password:\n\n{reset_link}\n\nIf you didn't request this reset, please ignore this email.\n\nBest regards,\nThe Admin Team"
         message = MIMEText(message_text)
         message["Subject"] = "Password Reset Request"

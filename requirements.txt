@@ -4,3 +4,4 @@ flask-login
 flask-cors
 pymongo
 PyJWT
+flask_pymongo
