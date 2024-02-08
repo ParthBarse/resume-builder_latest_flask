@@ -591,7 +591,7 @@ def zip_directory(directory, zip_filename):
                 file_path = os.path.join(root, file)
                 zipf.write(file_path, os.path.relpath(file_path, directory))
 
-@app.route("/downloadZip", methods=["POST"])
+@app.route("/downloadZip", methods=["GET"])
 def downloadZip():
     try:
         source_directory = "/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files"
