@@ -578,3 +578,28 @@ def reset_password():
 
     except Exception as e:
         return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
+    
+
+
+import os
+import zipfile
+
+def zip_directory(directory, zip_filename):
+    with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, _, files in os.walk(directory):
+            for file in files:
+                file_path = os.path.join(root, file)
+                zipf.write(file_path, os.path.relpath(file_path, directory))
+
+@app.route("/downloadZip", methods=["POST"])
+def downloadZip():
+    try:
+        source_directory = "/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files"
+        zip_filename = "/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Downloads/resume_files.zip"
+
+        zip_directory(source_directory, zip_filename)
+
+        return jsonify({'success': True, 'zip': 'https://files1.nursingpioneer.com/Downloads/resume_files.zip'}), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
