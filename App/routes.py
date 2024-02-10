@@ -595,12 +595,14 @@ def zip_directory(directory, zip_filename):
 def downloadZip():
     try:
         uid = request.args.get("uid")
-        source_directory = f"/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files/{uid}"
-        zip_filename = f"/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Downloads/{uid}_files.zip"
+        if not uid:
+            source_directory = f"/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files/{uid}"
+            zip_filename = f"/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Downloads/{uid}_files.zip"
 
-        zip_directory(source_directory, zip_filename)
+            zip_directory(source_directory, zip_filename)
 
-        return jsonify({'success': True, 'zip': 'https://files1.nursingpioneer.com/Downloads/resume_files.zip'}), 200
-
+            return jsonify({'success': True, 'zip': f'https://files1.nursingpioneer.com/Downloads/{uid}_files.zip'}), 200
+        else:
+            return jsonify({'success': False, 'msg': "uid not provided"}), 404
     except Exception as e:
         return jsonify({'success': False, 'msg': 'Something Went Wrong.', 'reason': str(e)}), 500
