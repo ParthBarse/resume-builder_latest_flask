@@ -594,8 +594,9 @@ def zip_directory(directory, zip_filename):
 @app.route("/downloadZip", methods=["GET"])
 def downloadZip():
     try:
-        source_directory = "/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files"
-        zip_filename = "/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Downloads/resume_files.zip"
+        uid = request.args.get("uid")
+        source_directory = f"/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files/{uid}"
+        zip_filename = f"/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Downloads/{uid}_files.zip"
 
         zip_directory(source_directory, zip_filename)
 
