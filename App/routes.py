@@ -595,7 +595,7 @@ def zip_directory(directory, zip_filename):
 def downloadZip():
     try:
         uid = request.args.get("uid")
-        if not uid:
+        if uid:
             source_directory = f"/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files/{uid}"
             zip_filename = f"/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Downloads/{uid}_files.zip"
 
