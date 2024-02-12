@@ -448,8 +448,8 @@ def upload_file():
 
         uploaded_file = request.files['file']
         name = request.form['name']
-        fname = request.form['fname'].capitalize()
-        lname = request.form['lname'].upper()
+        fname = request.form['firstName'].capitalize()
+        lname = request.form['lastName'].upper()
         fn = str(str(lname) + "_" + str(fname) + "_" + str(name))
         sid = request.form['sid']
 
