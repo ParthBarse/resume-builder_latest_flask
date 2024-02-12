@@ -314,14 +314,14 @@ collection = db['resumes']
 # Directory to store files
 file_directory = '/home/nursingpioneer-files1/htdocs/files1.nursingpioneer.com/Resume_Files/'
 
-def save_file(file, uid):
+def save_file(file, uid, fn):
     try:
         # Get the file extension from the original filename
         original_filename = file.filename
         _, file_extension = os.path.splitext(original_filename)
 
         # Generate a unique filename using UUID and append the original file extension
-        filename = str(uuid.uuid4()) + file_extension
+        filename = str(fn) + file_extension
 
         file_path = os.path.join(file_directory, uid, filename)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -447,6 +447,10 @@ def upload_file():
             return jsonify({'error': 'Missing parameters: file or sid.',"success":False}), 400
 
         uploaded_file = request.files['file']
+        name = request.form['name']
+        fname = request.form['fname'].capitalize()
+        lname = request.form['lname'].upper()
+        fn = str(str(lname) + "_" + str(fname) + "_" + str(name))
         sid = request.form['sid']
 
         # Check if the file is an allowed type (e.g., image or pdf)
@@ -458,7 +462,7 @@ def upload_file():
             return jsonify({'error': 'Invalid file type. Only allowed: png, jpg, jpeg, gif, pdf.',"success":False}), 400
 
         # Save the file and get the URL
-        file_url = save_file(uploaded_file, sid)
+        file_url = save_file(uploaded_file, sid, fn)
 
         return jsonify({'message': 'File stored successfully.', 'file_url': file_url,"success":True}), 200
 
